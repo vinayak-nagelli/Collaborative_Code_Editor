@@ -1,0 +1,287 @@
+{
+  "runDate": "2026-10-25T14:05:08.075Z",
+  "team": [
+    {
+      "name": "Vinayak",
+      "email": "vinayak@test.com"
+    },
+    {
+      "name": "Aaqil",
+      "email": "aaqil@test.com"
+    },
+    {
+      "name": "Aniket",
+      "email": "aniket@test.com"
+    },
+    {
+      "name": "Aslam",
+      "email": "aslam@test.com"
+    }
+  ],
+  "projectId": "6ade0c8939f462783cbae755",
+  "summary": {
+    "passed": 43,
+    "failed": 0,
+    "total": 43
+  },
+  "details": [
+    {
+      "test": "Server Health",
+      "pass": true,
+      "detail": "Status: ok, Time: 2026-10-25T14:04:55.224Z",
+      "timestamp": "2026-10-25T14:04:55.241Z"
+    },
+    {
+      "test": "Register/Login Vinayak",
+      "pass": true,
+      "detail": "User ID: 6ade0ada0e9e5c7625a85497, JWT cookie set",
+      "timestamp": "2026-10-25T14:04:55.776Z"
+    },
+    {
+      "test": "Register/Login Aaqil",
+      "pass": true,
+      "detail": "User ID: 6ade0adb0e9e5c7625a8549a, JWT cookie set",
+      "timestamp": "2026-10-25T14:04:56.275Z"
+    },
+    {
+      "test": "Register/Login Aniket",
+      "pass": true,
+      "detail": "User ID: 6ade0adb0e9e5c7625a8549d, JWT cookie set",
+      "timestamp": "2026-10-25T14:04:56.739Z"
+    },
+    {
+      "test": "Register/Login Aslam",
+      "pass": true,
+      "detail": "User ID: 6ade0adc0e9e5c7625a854a0, JWT cookie set",
+      "timestamp": "2026-10-25T14:04:57.186Z"
+    },
+    {
+      "test": "Auth /me (Vinayak)",
+      "pass": true,
+      "detail": "Name: Vinayak, Email: vinayak@test.com",
+      "timestamp": "2026-10-25T14:04:57.477Z"
+    },
+    {
+      "test": "Auth /me (Aaqil)",
+      "pass": true,
+      "detail": "Name: Aaqil, Email: aaqil@test.com",
+      "timestamp": "2026-10-25T14:04:57.554Z"
+    },
+    {
+      "test": "Auth /me (Aniket)",
+      "pass": true,
+      "detail": "Name: Aniket, Email: aniket@test.com",
+      "timestamp": "2026-10-25T14:04:57.601Z"
+    },
+    {
+      "test": "Auth /me (Aslam)",
+      "pass": true,
+      "detail": "Name: Aslam, Email: aslam@test.com",
+      "timestamp": "2026-10-25T14:04:57.657Z"
+    },
+    {
+      "test": "Create Project",
+      "pass": true,
+      "detail": "Project ID: 6ade0c8939f462783cbae755, Invite Code: EnhZ76o8",
+      "timestamp": "2026-10-25T14:04:58.114Z"
+    },
+    {
+      "test": "Aaqil joins project",
+      "pass": true,
+      "detail": "Role: editor, Preview OK: true",
+      "timestamp": "2026-10-25T14:04:58.677Z"
+    },
+    {
+      "test": "Aniket joins project",
+      "pass": true,
+      "detail": "Role: editor, Preview OK: true",
+      "timestamp": "2026-10-25T14:04:59.081Z"
+    },
+    {
+      "test": "Aslam joins project",
+      "pass": true,
+      "detail": "Role: editor, Preview OK: true",
+      "timestamp": "2026-10-25T14:04:59.498Z"
+    },
+    {
+      "test": "Team Member Count",
+      "pass": true,
+      "detail": "Total Members: 4/4 (1 Owner + 3 Collaborators)",
+      "timestamp": "2026-10-25T14:04:59.640Z"
+    },
+    {
+      "test": "Create file: auth.js",
+      "pass": true,
+      "detail": "ID: 6ade0c8b39f462783cbae77d",
+      "timestamp": "2026-10-25T14:04:59.874Z"
+    },
+    {
+      "test": "Create file: server.js",
+      "pass": true,
+      "detail": "ID: 6ade0c8c39f462783cbae782",
+      "timestamp": "2026-10-25T14:05:00.109Z"
+    },
+    {
+      "test": "Create folder: utils",
+      "pass": true,
+      "detail": "ID: 6ade0c8c39f462783cbae787",
+      "timestamp": "2026-10-25T14:05:00.301Z"
+    },
+    {
+      "test": "Create file: test.js",
+      "pass": true,
+      "detail": "ID: 6ade0c8c39f462783cbae78c",
+      "timestamp": "2026-10-25T14:05:00.501Z"
+    },
+    {
+      "test": "Create Requirement",
+      "pass": true,
+      "detail": "ID: 6ade0c8c39f462783cbae791, ACs: 4",
+      "timestamp": "2026-10-25T14:05:00.776Z"
+    },
+    {
+      "test": "Create Requirement (Aaqil)",
+      "pass": true,
+      "detail": "ID: 6ade0c8c39f462783cbae798",
+      "timestamp": "2026-10-25T14:05:01.111Z"
+    },
+    {
+      "test": "List Requirements",
+      "pass": true,
+      "detail": "Count: 2",
+      "timestamp": "2026-10-25T14:05:01.424Z"
+    },
+    {
+      "test": "Toggle Acceptance Criteria",
+      "pass": true,
+      "detail": "First AC marked completed",
+      "timestamp": "2026-10-25T14:05:02.142Z"
+    },
+    {
+      "test": "Create Task #1 (Vinayak)",
+      "pass": true,
+      "detail": "ID: 6ade0c8e39f462783cbae7b3, Linked: auth.js",
+      "timestamp": "2026-10-25T14:05:02.536Z"
+    },
+    {
+      "test": "Create Task #2 (Aaqil)",
+      "pass": true,
+      "detail": "ID: 6ade0c8e39f462783cbae7bd, Linked: server.js",
+      "timestamp": "2026-10-25T14:05:02.815Z"
+    },
+    {
+      "test": "Create Task #3 (Aniket)",
+      "pass": true,
+      "detail": "ID: 6ade0c8e39f462783cbae7c6, Linked: test.js, auth.js",
+      "timestamp": "2026-10-25T14:05:03.092Z"
+    },
+    {
+      "test": "Task #1 → done",
+      "pass": true,
+      "detail": "Vinayak completed JWT login task",
+      "timestamp": "2026-10-25T14:05:03.439Z"
+    },
+    {
+      "test": "Task #2 → in_progress",
+      "pass": true,
+      "detail": "Aaqil started server bootstrap",
+      "timestamp": "2026-10-25T14:05:03.835Z"
+    },
+    {
+      "test": "Create Test Case #1",
+      "pass": true,
+      "detail": "ID: 6ade0c8f39f462783cbae7e2",
+      "timestamp": "2026-10-25T14:05:04.133Z"
+    },
+    {
+      "test": "Create Test Case #2 (Aslam)",
+      "pass": true,
+      "detail": "ID: 6ade0c9039f462783cbae7e9",
+      "timestamp": "2026-10-25T14:05:04.430Z"
+    },
+    {
+      "test": "Execute Test #1 → PASSED",
+      "pass": true,
+      "detail": "Aniket executed and passed",
+      "timestamp": "2026-10-25T14:05:05.343Z"
+    },
+    {
+      "test": "Execute Test #2 → FAILED",
+      "pass": true,
+      "detail": "Aslam found failure",
+      "timestamp": "2026-10-25T14:05:05.690Z"
+    },
+    {
+      "test": "File Bug from Failed Test",
+      "pass": true,
+      "detail": "Bug ID: 6ade0c9139f462783cbae7fe, Severity: high",
+      "timestamp": "2026-10-25T14:05:05.972Z"
+    },
+    {
+      "test": "Bug → in_progress (Vinayak)",
+      "pass": true,
+      "detail": "Vinayak assigned to fix",
+      "timestamp": "2026-10-25T14:05:06.406Z"
+    },
+    {
+      "test": "Bug → resolved",
+      "pass": true,
+      "detail": "Fix: auth middleware corrected",
+      "timestamp": "2026-10-25T14:05:06.734Z"
+    },
+    {
+      "test": "Health Dashboard",
+      "pass": true,
+      "detail": "Score: 90/100, Tasks Done: 1/3",
+      "timestamp": "2026-10-25T14:05:06.971Z"
+    },
+    {
+      "test": "MongoDB Connected",
+      "pass": true,
+      "detail": "DB Status: connected",
+      "timestamp": "2026-10-25T14:05:07.031Z"
+    },
+    {
+      "test": "Users Stored in DB",
+      "pass": true,
+      "detail": "Total Users: 7",
+      "timestamp": "2026-10-25T14:05:07.031Z"
+    },
+    {
+      "test": "Projects Stored in DB",
+      "pass": true,
+      "detail": "Total Projects: 5",
+      "timestamp": "2026-10-25T14:05:07.031Z"
+    },
+    {
+      "test": "Sessions Stored in DB",
+      "pass": true,
+      "detail": "Sessions: 2",
+      "timestamp": "2026-10-25T14:05:07.031Z"
+    },
+    {
+      "test": "Aslam reads Vinayak's requirements",
+      "pass": true,
+      "detail": "Count: 2",
+      "timestamp": "2026-10-25T14:05:07.298Z"
+    },
+    {
+      "test": "Aniket reads all team tasks",
+      "pass": true,
+      "detail": "Count: 3",
+      "timestamp": "2026-10-25T14:05:07.591Z"
+    },
+    {
+      "test": "Aaqil reads Aslam's bugs",
+      "pass": true,
+      "detail": "Count: 1",
+      "timestamp": "2026-10-25T14:05:07.836Z"
+    },
+    {
+      "test": "Vinayak reads all QA tests",
+      "pass": true,
+      "detail": "Count: 2",
+      "timestamp": "2026-10-25T14:05:08.072Z"
+    }
+  ]
+}

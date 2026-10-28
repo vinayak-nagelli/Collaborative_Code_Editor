@@ -1,0 +1,11 @@
+# Dependencies
+node_modules/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Local environment variables (keep example templates)
+.env
+.env.*
+!.env.example

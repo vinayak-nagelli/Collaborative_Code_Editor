@@ -1,0 +1,332 @@
+=== CollabIDE_Antigravity_Project_Context_and_Implementation_Guide.docx ===
+
+[0] COLLABIDE
+[1] Antigravity Project Context & Implementation Guide
+[2] Read this before changing the existing codebase
+[7] 1. Product Identity
+[8] Current project name: CollabIDE — Real-Time Collaborative Code Editor
+[9] Target evolution: Collaborative Engineering Platform — one workspace connecting requirements, coding, collaboration, testing, project management, contribution evidence and AI assistance.
+[10] One-sentence vision: Help software teams move from requirement to working, tested software in one shared environment while keeping project activity transparent and the human team in control.
+[12] 2. Current Implementation: What the ZIP Actually Contains
+[13] The uploaded ZIP README states that the following are real implemented features, while the debugger is a UI shell and the extensions marketplace is a mock catalog. The ZIP contains the React client, Node/Express server, MongoDB/Mongoose models, Yjs collaboration core, Socket.IO events and terminal/Git services.
+[15] 3. Current Architecture: Frontend vs Backend vs Database
+[18] 4. Frontend Map
+[20] 5. Backend Map
+[22] 6. Current Database Model
+[24] 7. Realtime Collaboration: Non-Negotiable Behavior
+[25] Each collaboratively open file uses a real Y.Doc in server memory.
+[26] Clients send binary Yjs update deltas; they do not treat the whole file string as the live synchronization payload.
+[27] Yjs updates are merged with CRDT semantics; do not introduce last-write-wins logic.
+[28] Awareness carries cursor/selection/presence information.
+[29] Only opening/closing a file changes Y.Doc ownership/ref counts; high-frequency updates should use peek/non-owning lookup behavior.
+[30] MongoDB persistence is debounced rather than performed on every keystroke.
+[31] Version restore must merge through the CRDT path instead of blindly overwriting the live editor.
+[32] Any feature that modifies code in a file that may be open collaboratively must respect the Y.Doc as the live source of truth.
+[33] 8. Current Security Model and Constraints
+[34] JWT is stored in an HTTP-only cookie; client JavaScript should not receive the token directly.
+[35] Project REST routes use membership/owner/editor middleware; the server derives roles from the database.
+[36] Socket connections authenticate at handshake and collaboration events re-check project membership.
+[37] Project collaboration room capacity is enforced server-side (current maximum 4).
+[38] Terminal commands use an explicit binary allowlist, shell=false, 30s wall-clock timeout and 200KB output cap.
+[39] Terminal commands execute against a scratch copy rather than the application source tree.
+[40] Credential-bearing Git remote URLs are a documented MVP caveat; do not design a public production system around plaintext secrets in MongoDB.
+[41] Before exposing execution to untrusted internet users, replace the current trusted-user terminal model with real container isolation / resource limits.
+[42] 9. Expanded Product Vision: Problems by Role
+[45] 10. Feature Map: Old vs New
+[47] 11. Core New Concept: End-to-End Traceability
+[48] Requirement → User Story → Task → Developer → Code Change → Pull Request → Review → Test → Bug → Fix → Retest → Release
+[49] This traceability chain should become the backbone of the expanded platform. Each step should reference the relevant project objects rather than duplicating text everywhere.
+[51] 12. AI Copilot: Implementation Target
+[52] The synopsis already defines a verification-first, repository-aware Copilot. Implement it as a separate AI service/module so the core IDE remains usable if the model provider is unavailable.
+[54] 13. New Role-Centric Modules
+[56] 14. Frontend / Backend / Database Example Mapping
+[57] Use this pattern whenever a new feature is added. Not every feature needs all three layers, but persistent business capabilities usually do.
+[59] 15. Recommended Roadmap from the Current Implementation
+[61] 16. Rules for Antigravity While Coding
+[62] First inspect the existing files and execution path relevant to the feature. Do not guess where logic lives.
+[63] Prefer extending existing controllers, services, stores and components instead of replacing working modules.
+[64] Keep API logic in backend routes/controllers/services and keep React components focused on UI/state orchestration.
+[65] Use the existing authorization middleware for every project-scoped endpoint.
+[66] Use MongoDB for durable business records; use Socket.IO/Yjs for live state and ephemeral presence.
+[67] For collaborative file changes, never make a direct REST full-file overwrite the source of truth when the Y.Doc is open.
+[68] For AI-generated code, use proposal → verification → human approval → CRDT application.
+[69] Do not add an AI provider directly into many frontend components; create an AI service boundary.
+[70] Keep execution isolated and preserve the current terminal security assumptions. Avoid enabling arbitrary shell execution.
+[71] Add migrations/backward-compatible defaults for new MongoDB fields. Existing projects must keep working.
+[72] When adding a new persistent domain object, define: schema/model, controller/service, routes, frontend store/state, UI, permissions, and tests as applicable.
+[73] After changing realtime code, test concurrent edits, reconnects, file close/open, restore-version and presence cleanup.
+[74] After changing search, Git or terminal services, test interaction with the shared scratch workspace and live Y.Doc.
+[75] Never mark a feature complete unless it is actually wired end-to-end and tested.
+[76] 17. Definition of Done for Any New Feature
+[77] ☐ User can reach the feature from an intentional UI entry point.
+[78] ☐ Frontend state is managed consistently with existing Zustand/service patterns.
+[79] ☐ Backend API/socket path exists where required and validates authentication + project permissions.
+[80] ☐ Persistent data has a Mongoose model or a deliberate reason why persistence is unnecessary.
+[81] ☐ Errors are handled and visible to the user in a consistent way.
+[82] ☐ Feature works with existing projects and does not break collaboration.
+[83] ☐ Feature has a minimal test path or manual verification checklist.
+[84] ☐ Documentation/readme is updated when setup, events or security behavior changes.
+[85] ☐ No mock/stub is presented as production behavior unless explicitly labeled as future/mock.
+[86] 18. Non-Goals / Things Not to Build Yet
+[87] Do not rebuild the editor or replace Monaco unless there is a demonstrated requirement.
+[88] Do not replace Yjs/CRDT collaboration with a naive database-save-on-every-keystroke approach.
+[89] Do not implement every startup idea in one sprint. Prioritize the final-year MVP around requirements, tasks, contribution evidence, QA and AI.
+[90] Do not build a full video-conferencing stack before the core engineering workflow is stable.
+[91] Do not expose arbitrary command execution to the public internet without real container isolation.
+[92] Do not use lines-of-code as the main employee performance score.
+[93] Do not create a giant single React component or giant Express controller for all new modules; split by domain.
+[94] 19. Source Materials Used to Build This Context
+[96] 20. Appendix: Important Current File Map
+[97] collab-editor/
+├── client/
+│   └── src/
+│       ├── App.jsx
+│       ├── collaboration/SocketYjsProvider.js
+│       ├── editor/CodeEditor.jsx
+│       ├── pages/
+│       │   ├── Landing.jsx
+│       │   ├── Login.jsx
+│       │   ├── Register.jsx
+│       │   ├── Dashboard.jsx
+│       │   ├── Workspace.jsx
+│       │   └── InviteLanding.jsx
+│       ├── components/
+│       │   ├── FileExplorer.jsx
+│       │   ├── EditorTabs.jsx
+│       │   ├── Terminal.jsx
+│       │   ├── SearchPanel.jsx
+│       │   ├── SourceControlPanel.jsx
+│       │   ├── VersionHistoryPanel.jsx
+│       │   ├── ProblemsPanel.jsx
+│       │   ├── DebugPanel.jsx
+│       │   ├── ExtensionsPanel.jsx
+│       │   ├── InviteModal.jsx
+│       │   └── JoinProjectModal.jsx
+│       ├── store/
+│       │   ├── authStore.js
+│       │   ├── projectStore.js
+│       │   ├── fileStore.js
+│       │   ├── editorStore.js
+│       │   ├── terminalStore.js
+│       │   ├── problemsStore.js
+│       │   ├── breakpointsStore.js
+│       │   ├── themeStore.js
+│       │   └── uiStore.js
+│       └── services/
+│           ├── api.js
+│           └── socket.js
+└── server/
+    ├── controllers/
+    │   ├── auth.controller.js
+    │   ├── project.controller.js
+    │   ├── file.controller.js
+    │   └── sourceControl.controller.js
+    ├── routes/
+    │   ├── auth.routes.js
+    │   ├── project.routes.js
+    │   └── file.routes.js
+    ├── middleware/
+    │   ├── auth.js
+    │   ├── projectAccess.js
+    │   └── errorHandler.js
+    ├── models/
+    │   ├── User.js
+    │   ├── Project.js
+    │   ├── File.js
+    │   ├── FileVersion.js
+    │   └── CollaborationSession.js
+    ├── socket/
+    │   ├── socket.js
+    │   ├── room.socket.js
+    │   ├── presence.socket.js
+    │   ├── collaboration.socket.js
+    │   └── terminal.socket.js
+    ├── collaboration/ydocManager.js
+    ├── services/
+    │   ├── terminal.service.js
+    │   ├── workspace.service.js
+    │   ├── git.service.js
+    │   └── template.service.js
+    └── index.js
+[98] 21. Immediate Next Instruction to Antigravity
+[100] Recommended first implementation target: Requirement + Task management, because it creates the foundation for the later contribution dashboard, QA integration, traceability and project-aware AI. Do not start with video calling or billing.
+
+--- TABLE 0 ---
+Purpose This document gives an AI coding agent enough project context to understand what already exists, what is only proposed, what the product is becoming, how frontend/backend/database responsibilities are separated, and how to extend the current codebase without unnecessarily rebuilding it.
+
+--- TABLE 1 ---
+Source precedence When deciding whether something already exists, use this order: (1) current ZIP/source code + README, (2) uploaded synopsis, (3) the handwritten product ideas discussed in this conversation, (4) new implementation suggestions. Never mark a feature as implemented only because it appears in the synopsis.
+
+--- TABLE 2 ---
+Core instruction Extend the existing architecture. Prefer small, testable changes over rewrites or stack migrations. Do not replace Yjs/CRDT collaboration with a different synchronization approach unless explicitly requested.
+
+--- TABLE 3 ---
+Important positioning The browser IDE remains the core product. The product is not just “another VS Code clone”; its differentiation should come from connecting the development lifecycle around the shared workspace.
+
+--- TABLE 4 ---
+Feature | Status | Current scope
+Project setup | ✅ Implemented | Monorepo, scripts, env files
+Auth | ✅ Implemented | Register, login, logout, /me, JWT cookie, bcrypt
+Dashboard | ✅ Implemented | Projects, filters, star support
+Project creation/templates | ✅ Implemented | Empty, HTML/CSS/JS, React, Node, Express, MERN, Python, Java, C++, Next.js
+File system CRUD | ✅ Implemented | Create, rename, move, delete, duplicate, nested folders
+Monaco editor | ✅ Implemented | Browser code editor
+Socket rooms | ✅ Implemented | Join/leave, presence, 4-user cap
+Yjs collaborative editing | ✅ Implemented | Per-file Y.Doc, binary update deltas, conflict-free merge
+Awareness / live cursors | ✅ Implemented | Cursor, selection, name/color presence
+Invite links | ✅ Implemented | Generate/regenerate/disable/expire + join flow
+Terminal | ✅ Implemented | Allowlist, no shell, timeouts, output cap, scratch workspace
+Workspace search | ✅ Implemented | Regex, case, whole-word, replace-all
+Source control | ✅ Implemented | Changes, commit, log, Git push/pull
+Command palette | ✅ Implemented | Command actions
+Themes | ✅ Implemented | Multiple themes including dark/light/high contrast
+Version history | ✅ Implemented | CRDT-safe restore + version snapshots
+Security / rate limiting | ✅ Implemented | Auth/project checks + security middleware
+Keyboard shortcuts | ✅ Implemented | Save, close, sidebar, command/navigation
+Problems panel | ✅ Implemented | Monaco diagnostics
+Breakpoints | ✅ Implemented | Glyph-margin toggles
+Debugger | 🚧 Incomplete | UI shell only; needs real debug adapter/backend
+Extensions marketplace | 🚧 Mock | Catalog UI only; local install/uninstall state
+
+--- TABLE 5 ---
+Layer | What it owns | Current technology / folders
+Frontend | UI, editor, panels, local state, API calls, socket client, user interactions | client/src; React 18, Vite, Tailwind, Monaco, Zustand, React Router, Axios, Socket.IO client, Yjs/y-monaco
+Backend API | Authentication, authorization, projects, files, versions, Git operations | server/controllers, routes, middleware, services; Node.js + Express
+Realtime layer | Rooms, presence, Yjs sync, terminal streaming | server/socket, server/collaboration; Socket.IO + Yjs
+Database layer | Durable records only | MongoDB + Mongoose models in server/models
+Execution layer | Run permitted commands in isolated project scratch workspace | server/services/terminal.service.js + workspace.service.js
+Source control layer | Git operations + sync to/from workspace | server/services/git.service.js + sourceControl.controller.js
+
+--- TABLE 6 ---
+Simple mental model Frontend asks. Backend validates and performs. Database stores durable state. Socket.IO/Yjs carries live collaboration. Terminal executes in a scratch workspace. The active collaborative document (Y.Doc) is authoritative for an open file during live editing.
+
+--- TABLE 7 ---
+Path | Responsibility | Agent guidance
+client/src/App.jsx | Application routing / top-level shell | Add new pages/routes here only when needed; keep route protection consistent.
+client/src/pages/ | Landing, Login, Register, Dashboard, Workspace, InviteLanding, MobileNotice | New role dashboards or project lifecycle pages should be added here rather than overloading one component.
+client/src/components/ | IDE panels and reusable workspace UI | Prefer focused panels/components; do not put backend logic directly in large components.
+client/src/editor/CodeEditor.jsx | Monaco + collaborative editor integration | Treat collaboration wiring as sensitive; avoid bypassing Yjs with full-file replacements.
+client/src/collaboration/SocketYjsProvider.js | Bridge between Y.Doc and Socket.IO | Core realtime code. Change only with careful synchronization tests.
+client/src/store/ | Auth, project, file, editor, UI, terminal, theme, problems, breakpoints state | New modules should use Zustand stores when state is shared across workspace components.
+client/src/services/api.js | Axios API client | Add API calls here, not ad hoc fetch calls scattered through components.
+client/src/services/socket.js | Socket.IO client connection | Use existing connection/auth flow for new realtime events.
+
+--- TABLE 8 ---
+Path | Responsibility | Agent guidance
+server/controllers/auth.controller.js | Registration/login/logout/me | Keep auth errors and cookie behavior consistent.
+server/controllers/project.controller.js | Project CRUD, stars, invites, membership/roles | New project lifecycle endpoints belong here or a dedicated controller if the module grows.
+server/controllers/file.controller.js | File CRUD, versions | Preserve project access checks.
+server/controllers/sourceControl.controller.js | Git changes/commit/log/push/pull | Do not bypass existing project permission middleware.
+server/middleware/auth.js | JWT authentication | Do not trust client-provided identity.
+server/middleware/projectAccess.js | Member/owner/editor permission checks | Reuse for new project-scoped APIs.
+server/services/terminal.service.js | Command execution | Security-sensitive; keep allowlist/no-shell/timeout/output cap.
+server/services/workspace.service.js | Materialize Mongo files to scratch workspace and sync disk back | Changes here affect terminal + Git synchronization.
+server/services/git.service.js | Git operations | Keep credential handling and path boundaries safe.
+server/socket/collaboration.socket.js | Yjs sync/update/restore/open-close events | Core collaboration path; change only with tests.
+server/socket/terminal.socket.js | Terminal create/input/output/kill/close | Use existing security model.
+server/collaboration/ydocManager.js | In-memory Y.Doc lifecycle and persistence/refs | Never replace with last-write-wins JSON updates.
+server/models/ | MongoDB schemas | Add new durable concepts as separate models when appropriate.
+server/routes/ | REST route definitions | Reuse auth + projectAccess middleware consistently.
+
+--- TABLE 9 ---
+Model | Key fields / purpose | Do not do
+User | name, email, hashed password, avatar, cursor color, timestamps | Do not store plaintext password. Do not trust role from client.
+Project | name, description, template, owner, members[role], invite settings, visibility, maxMembers, settings, Git remote | Do not expose or log credential-bearing Git URLs.
+File | projectId, parentId, name, type, path, content, language, version, createdBy, lastEditedBy | Do not make REST full-content replacement authoritative over an open Y.Doc.
+FileVersion | fileId, projectId, content, path, editedBy, message, createdAt | Use for historical snapshots; preserve user attribution.
+CollaborationSession | projectId + activeUsers/socketIds | Keep live cursor/selection state ephemeral; do not persist every cursor move.
+
+--- TABLE 10 ---
+Role | Typical pain point | Product response
+Developer / Employee | What do I build? Where are the requirements? What is blocking me? How do I prove what I contributed? Where is the code/test/bug context? | Requirement traceability, assigned tasks, blocker reporting, contribution timeline, project-aware AI, code-linked communication.
+Team Leader | Who is working on what? Is workload balanced? Which PRs or bugs are waiting? Which tasks are blocked? | Team workspace, workload/capacity view, blocker management, review queue, team activity view.
+Tester / QA | What should I test? Which requirements changed? Which build contains the fix? Where is the related code? | Requirement-linked test cases, test execution, bug lifecycle, build awareness, direct code/PR links, AI test generation.
+Engineering Manager | Is the project healthy? What is actually delivered? Where are risks and blockers? | Project health dashboard, evidence-backed contribution, requirements progress, risk/blocked work, release status.
+Project Owner / Client | What was requested, what is done, what is being tested, and what can I review? | Requirement summaries, milestone/release view, evidence trail, demo/preview access, status reports.
+
+--- TABLE 11 ---
+Contribution principle Do not use “lines of code” as the main productivity measure. Show evidence across tasks, features, bug fixes, tests, reviews, documentation and requirement delivery. The platform should provide transparency, not a simplistic employee score.
+
+--- TABLE 12 ---
+Area | Existing / baseline | Planned enhancement or new module | Priority
+IDE & editing | Monaco, file tree, tabs, diagnostics, breakpoints | Richer language tooling, formatting, better autocomplete, performance/code-splitting | P2
+Realtime collaboration | Yjs, awareness, rooms, invite links | Reconnect/offline improvements, collaborator follow/focus, larger team limits later | P1
+Project management | Project CRUD + dashboard | Requirements, user stories, tasks, milestones, releases | P0
+Contribution transparency | File versions + editedBy fields | Contribution timeline, evidence links, role-specific activity summaries | P0
+Team leadership | Basic roles owner/editor/viewer | Team dashboard, workload/capacity, blockers, review queue | P0
+QA/testing | Terminal + diagnostics | Requirement-linked tests, test execution UI, bug lifecycle, retest workflow | P0
+AI | Synopsis-only proposed Copilot | Project-aware AI, retrieval, test generation, defect analysis, patch proposals, verification + approval | P0
+Communication | No full project communication suite in current ZIP | Project chat, task/code comments, meeting notes; video later | P1/P2
+Resources | No dedicated resource hub | Requirements/docs/API/design/deployment resources | P1
+DevOps | Git push/pull | CI/CD hooks, preview environments, deployment status | P2
+Debugger | UI shell | Real debugger backend | P1
+Extensions | Mock marketplace | Real extension/plugin model | P2
+Security | Good MVP baseline | Secret manager, containers, audit log, stronger production isolation | P1
+Startup layer | Not in current code | Organizations, billing, usage, plan limits, admin | P3
+
+--- TABLE 13 ---
+Object | Why it exists | Likely links
+Requirement | What the customer/project actually asked for | tasks, acceptance criteria, tests, release
+Task | Concrete work item | requirement, assignee, status, blocker, PR
+Code change | Actual implementation evidence | files, commits, versions, PR
+Review / PR | Quality and approval workflow | changes, reviewer, comments, merge result
+Test case | Proof that a requirement works | requirement, build/commit, result
+Bug | Observed failure | test case, requirement, code change, assignee
+Release | Delivered project state | requirements, tasks, build, deployment, test report
+
+--- TABLE 14 ---
+Capability | Inputs | Output | Safety rule
+Explain code | Selected code, file, symbols, related files | Explanation | Read-only by default
+Generate tests | Requirement, selected code, related modules | Test proposal | User reviews before writing
+Defect analysis | Code + diagnostics + tests + recent changes | Potential causes/fixes | Show uncertainty/evidence
+Patch proposal | Task/bug + relevant repository context | Patch/diff | Never silently overwrite live file
+Verification | Patch + controlled execution/tests | Evidence + pass/fail/results | Execution is isolated
+Apply approved change | Approved diff + current Y.Doc state | CRDT transaction | CRDT remains authoritative
+Project summary | Requirements/tasks/tests/changes | Human-readable status report | Only summarize stored project evidence
+
+--- TABLE 15 ---
+Module | Key screens | Backend/data needed
+Requirements | List/detail, acceptance criteria, status, traceability | Requirement model + project routes + links to tasks/tests/releases
+Tasks | Board/list, assignee, priority, due date, blocker | Task model + task routes + activity events
+Team Dashboard | Members, workload, blockers, review queue | Team aggregates + project/member/activity data
+Contribution Timeline | Developer evidence by date/project | Activity/event model; link to tasks/versions/PRs/tests
+QA Workspace | Test cases, runs, bugs, retest | TestCase/TestRun/Bug models + execution service integration
+Communication | Project chat, task/code comments, meeting notes | Message/Comment models + Socket.IO events
+Resource Hub | Docs, links, files, guides | Resource model or project-linked document metadata
+Project Health | Requirements progress, bugs, blocked tasks, review queue, releases | Aggregations across project domain models
+
+--- TABLE 16 ---
+Feature | Frontend | Backend | Database
+Create requirement | RequirementsPage + form + Zustand | POST /projects/:id/requirements | Requirement
+Assign task | Task board modal | PUT /tasks/:id | Task
+Blocker report | “I am blocked” modal | POST /tasks/:id/blockers | Blocker or Task fields
+Contribution timeline | DeveloperActivityPanel | GET /projects/:id/activity | ActivityEvent
+Create test case | QAPanel | POST /requirements/:id/tests | TestCase
+Report bug | Bug modal | POST /tests/:id/bugs | Bug
+Project chat | ChatPanel + Socket.IO | socket message event / optional REST history | Message
+Project resource | ResourcePanel | POST /projects/:id/resources | Resource
+AI patch proposal | CopilotPanel | POST /ai/patch / AI service | Optional AIRequest/AIProposal audit record
+Project health | Dashboard widgets | GET /projects/:id/health | Usually computed from multiple collections; cache only if needed
+
+--- TABLE 17 ---
+Phase | Goal | Main implementation area | Priority
+Phase 0 — Baseline audit | Do not add features yet. Run current app, verify MongoDB, test auth, project creation, file CRUD, collaboration, terminal, search, Git and version restore. Record bugs. | Current code + tests | P0
+Phase 1 — Stabilize core | Fix known gaps: CRDT-safe search/replace, deleted-file tracking, Git credential handling plan, collaboration edge cases, performance/code-splitting. | Existing frontend/server/services | P0
+Phase 2 — Requirements & tasks | Add requirement, user story, task, assignment, status, priority, blocker and milestone concepts. Link tasks to code/review/tests later. | React pages/components; new Express routes/controllers/models | P0
+Phase 3 — Contribution transparency | Add activity event model, contribution timeline and evidence-linked summaries for team members. Avoid simplistic scoring. | Dashboard UI; activity APIs; Mongo event records | P0
+Phase 4 — QA integration | Add test cases, test runs, bug lifecycle, retest flow and requirement links. | QA pages/panels + backend models/routes | P0
+Phase 5 — AI Copilot | Add project-aware context retrieval, explanation, test generation, defect analysis, patch proposal and verification/approval flow. Keep provider behind a service interface. | Copilot UI + AI service + retrieval + execution hooks | P0
+Phase 6 — Team communication | Add project chat, task/code comments and project resources. Video/meetings later. | Socket events + message/resource models + UI | P1
+Phase 7 — Management dashboards | Project health, workload/capacity, review queue, release overview, evidence-based contribution reports. | Aggregation APIs + dashboard UI | P1
+Phase 8 — DevOps & deployment | CI/CD integration, preview environments, safer Git authentication, container execution. | Backend services + deployment infrastructure | P2
+Phase 9 — Startup layer | Organizations, billing, quotas, admin, audit, stronger isolation and scalable infrastructure. | Cross-cutting backend + cloud infrastructure | P3
+
+--- TABLE 18 ---
+Source | Role in this document
+final year project .zip | Primary source for actual implementation, file structure, README and current code behavior.
+Collaborative_Code_Editor_Synopsis.pdf | Source for project rationale, objectives, architecture and proposed AI Copilot methodology.
+new pdf codeeditor.pdf | Second uploaded copy / supporting synopsis content and implementation-status descriptions.
+Handwritten project idea image | Source for the new concepts around employee contribution visibility, team leader/manager analysis, testing integration, chat/video/resources.
+
+--- TABLE 19 ---
+Start here Before implementing any new feature, read this document and then inspect the current repository/README. Next, produce a short “current-state report” listing the exact files and flows you will touch for the requested feature. Do not modify the code until the change plan is internally consistent with the existing Yjs collaboration, authorization, MongoDB model structure and workspace/terminal services.

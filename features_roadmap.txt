@@ -1,0 +1,261 @@
+=== CollabIDE_Features_and_Roadmap.docx ===
+
+[0] COLLABIDE
+[1] Features, Enhancements & Development Roadmap
+[2] From Collaborative Code Editor to a Collaborative Engineering Platform
+[8] 1. Executive Summary
+[9] Current state: The uploaded ZIP contains a working MERN-based collaborative IDE foundation. The README explicitly marks authentication, dashboard, project/templates, file CRUD, Monaco editor, Socket.IO rooms, Yjs CRDT collaboration, presence, invitation links, terminal execution, search, source control, command palette, themes, version history, security/rate limiting, keyboard shortcuts, diagnostics and breakpoints as implemented. The debugger and extensions marketplace remain incomplete/mock components.
+[10] Direction proposed in this plan: Keep the collaborative IDE as the core, but extend it into a collaborative engineering platform connecting requirements, tasks, coding, code review, testing, bugs, communication, contribution evidence, project health and AI.
+[12] 2. Current Technical Baseline
+[14] 2.1 Current Database Models
+[16] 3. Old / Current Features
+[17] These are the features that belong to the current project baseline. Status is based primarily on the ZIP README/source rather than only the synopsis.
+[19] 3.1 Current Technical Gaps to Fix Before Adding Large Features
+[21] 4. Features Already Proposed by the Synopsis (AI Layer)
+[22] The synopsis already proposes a Collaboration-Aware AI Copilot. These are not counted as completely new ideas, but they are a major implementation opportunity because the ZIP does not contain an AI provider/RAG/LLM integration.
+[25] 5. New Features Discussed in the Planning Session
+[26] These features go beyond the current ZIP baseline. They are grouped by the real problems faced by managers, team leaders, developers, testers and project owners.
+[27] 5.1 Manager / Project Owner Features
+[29] 5.2 Team Leader Features
+[31] 5.3 Developer / Employee Features
+[33] 5.4 Tester / QA Features
+[35] 5.5 Communication & Resource Features
+[37] 5.6 Startup / Platform Expansion Features
+[40] 6. Core Differentiator: End-to-End Traceability
+[42] Requirement -> Task -> Developer -> Code Change -> Review -> Test -> Bug/Result -> Release
+[44] 7. Frontend vs Backend vs Database — Simple Map
+[45] This is the part to use when you are confused about where a feature belongs. In this project, nearly every feature crosses all three layers.
+[48] 7.1 Current Architecture in One View
+[50] 8. Recommended Roadmap Based on the Current Implementation
+[51] The sequence below avoids rebuilding the project. It starts from the existing working collaboration core, closes current gaps, then adds product features in dependency order.
+[53] 8.1 Feature Dependency Order
+[54] Keep the current collaborative IDE stable: authentication → project/files → CRDT collaboration → terminal/Git/version history.
+[55] Add requirements and tasks so there is a clear unit of work to connect to code.
+[56] Add review and QA so a code change can be linked to verification.
+[57] Add contribution/analytics only after work items and change history exist as reliable evidence.
+[58] Add AI using the project graph and existing diagnostics/version information as context.
+[59] Add communication and resources around the same project/task objects rather than as an isolated chat app.
+[60] Add deployment/CI-CD after build and test results are trackable.
+[61] Add SaaS/multi-tenant/billing features only after the engineering workflow itself works well.
+[62] 9. Recommended Final-Year MVP vs Later Startup Scope
+[64] 10. Practical Implementation Guidance
+[66] Frontend: create pages/components for requirements, tasks, QA, dashboards and AI panels; connect them to the existing API and socket services.
+[67] Backend: create routes/controllers/services for each new domain; keep authorization on the server; do not trust role or ownership decisions from the browser.
+[68] Database: add new collections/models only when the feature has persistent project data. Avoid storing transient cursor/presence information unless it is needed for analytics.
+[69] AI: start with a simple provider-backed service and project context selection. Add a separate vector database only when the basic retrieval flow is proven to need it.
+[70] Analytics: prefer evidence derived from project events (tasks, code changes, reviews, tests, bugs) instead of manual “productivity” scores.
+[71] Security: before public exposure, replace credential-embedded Git remotes and upgrade terminal execution from process allowlists to per-project container isolation.
+[72] 11. Final Project Direction
+[73] Working concept: CollabIDE as a collaborative engineering workspace — not only an online code editor.
+[76] Note: Features labeled as recommendations or future expansion are product-design proposals from this planning session, not claims that those features already exist. The current implementation status is anchored to the uploaded project ZIP/README and the project synopsis.
+
+--- TABLE 0 ---
+Document purpose Create a single, practical working plan that separates the current project baseline from proposed enhancements and new startup-oriented features, then maps those features to frontend, backend, database, and implementation phases.
+
+--- TABLE 1 ---
+Source basis This document uses the uploaded Collaborative Code Editor / CollabIDE synopsis, the uploaded project ZIP and its README/source structure, plus the feature ideas written in the user notes during this planning discussion.
+
+--- TABLE 2 ---
+Important status rule A feature is not called “implemented” just because it appears in the synopsis. The ZIP/README is treated as the stronger source for current implementation status. The synopsis is used for proposed AI and future-scope features.
+
+--- TABLE 3 ---
+Product principle Do not measure a developer only by lines of code. Show evidence-based contribution across tasks, changes, reviews, tests, documentation and delivered requirements. This protects transparency without turning the system into a simplistic productivity-score tool.
+
+--- TABLE 4 ---
+Layer | Current implementation in ZIP | Main technologies
+Frontend | Browser IDE, dashboard, auth screens, workspace, editor, panels, stores, API/socket clients | React 18, Vite, Tailwind CSS, Monaco, Zustand, React Router, Axios, Socket.IO client, Yjs/y-monaco
+Backend | REST API, authentication, project/file controllers, middleware, services, sockets, collaboration manager | Node.js, Express, JWT, bcryptjs, Socket.IO, Yjs, security middleware
+Database | Persistent users, projects, files, file versions, collaboration session records | MongoDB with Mongoose
+Execution | Sandboxed terminal using allowlisted binaries, no shell, timeout/output limits | Node child_process + workspace service
+Source control | Git changes, commits, push/pull and synchronization into workspace | Git service + filesystem workspace
+Real-time state | Per-file Y.Doc in server memory + Awareness for cursors/presence | Yjs, y-protocols, y-monaco, Socket.IO
+
+--- TABLE 5 ---
+Model / collection | Current purpose | Future expansion
+User | Identity, email, hashed password, avatar/color, timestamps | Profile, organization membership, notification preferences
+Project | Project metadata, owner, members/roles, invitation settings, templates, editor settings, Git remote | Teams, requirements, tasks, releases, project health, environments
+File | Project file/folder tree, content, language, revision, created/edited by | Traceability to tasks/requirements, richer metadata, soft-delete/audit support
+FileVersion | Version snapshots, path, editor, optional message | Links to PR/review/task/requirement and richer audit history
+CollaborationSession | Active users/socket IDs for a project room | Session analytics and collaboration metrics; keep ephemeral cursor data out of DB
+
+--- TABLE 6 ---
+Feature | Status | Current scope
+Project setup | ✅ Implemented | Monorepo, scripts, environment setup
+Authentication | ✅ Implemented | Register/login/logout/me, JWT cookie, bcrypt
+Dashboard | ✅ Implemented | Project cards, filters and star support
+Project creation & templates | ✅ Implemented | Multiple starter templates including React, Node/Express, MERN, Python, Java, C++ and Next.js
+File/folder management | ✅ Implemented | Create, rename, move, delete, duplicate and nested folders
+Monaco editor | ✅ Implemented | Browser code editor
+Collaborative rooms | ✅ Implemented | Join/leave rooms with four-member cap
+CRDT collaboration | ✅ Implemented | Yjs per-file Y.Doc with real conflict-free merging
+Live presence | ✅ Implemented | Awareness, cursors and selections
+Invite links | ✅ Implemented | Generate/regenerate/disable/expire invite links
+Terminal | ✅ Implemented | Real sandboxed command execution with allowlist, no shell, timeout and output limits
+Workspace search/replace | ✅ Implemented | Regex, case/whole-word options and replace-all
+Source control | ✅ Implemented | Changes, commits, log, real Git push/pull
+Command palette | ✅ Implemented | Keyboard-accessible command actions
+Themes | ✅ Implemented | Dark Modern, Light, High Contrast, Neon Green, Monokai, Dracula
+Version history | ✅ Implemented | CRDT-safe restore; snapshots on debounced autosave
+Security/rate limiting | ✅ Implemented | JWT auth checks, project access checks and security middleware
+Keyboard shortcuts | ✅ Implemented | Save, close, sidebar, command/navigation shortcuts
+Problems / diagnostics | ✅ Implemented | Monaco diagnostics panel
+Breakpoints | ✅ Implemented | Monaco glyph-margin toggles
+Debugger | 🚧 Incomplete | UI shell; needs real debugger backend / adapter integration
+Extensions marketplace | 🚧 Mock | Catalog UI only; install/uninstall is local state
+
+--- TABLE 7 ---
+Gap | Why it matters | Action
+Debugger backend | Current UI is only a shell. | Implement a real debug adapter/backend; connect execution, breakpoints, stack, variables and watch.
+Extensions marketplace | Install/uninstall is mock/local state. | Replace mock behavior with a defined extension model, or explicitly keep it as a future phase.
+Git authentication | Credential-embedded HTTPS URLs are not production-safe. | Move to a safer secret-management/auth approach before public use.
+Search replace-all consistency | REST replace-all can conflict with an open live Y.Doc. | Route changes for collaboratively open files through the CRDT path.
+Deleted-file source-control visibility | Deleted File records are hard-deleted. | Track deleted files or use soft-delete so source control can show D entries.
+Terminal isolation | Current allowlist/no-shell/timeout model is for a trusted-user MVP. | Use per-project containers before supporting untrusted public workloads.
+Bundle performance | Monaco/Yjs creates a large frontend bundle. | Add code splitting/dynamic imports in a later performance pass.
+
+--- TABLE 8 ---
+AI capability | Purpose | Status for current ZIP
+Code explanation | Explain selected/current code with project context | ❌ Not implemented
+Test-case generation | Generate tests using relevant project context | ❌ Not implemented
+Bug/defect analysis | Analyze defects and code smells | ❌ Not implemented
+Contextual suggestions | Use active file, related files, diagnostics and changes | ❌ Not implemented
+Patch proposals | Propose safe code changes instead of directly overwriting | ❌ Not implemented
+Retrieval pipeline | Select relevant project files/symbols/diagnostics/tests | ❌ Not implemented
+Verification workflow | Run proposed changes in controlled execution and show evidence | ❌ Not implemented
+Human approval | Developer accepts/rejects before shared application | ❌ Not implemented
+CRDT-safe AI application | Approved changes become shared live document state | ❌ Not implemented
+
+--- TABLE 9 ---
+Synopsis workflow AI proposes → verification provides evidence → human approves → CRDT applies the change. The live collaborative document remains the source of truth.
+
+--- TABLE 10 ---
+Feature | Purpose
+Engineering / Project Health Dashboard | Requirements, development, testing, bugs, blocked tasks, review queue, build/deployment status in one view
+Team Overview | See current work, assigned tasks, blockers, review load and project participation
+Evidence-based Contribution View | Show delivered requirements, tasks, PRs, reviews, bugs fixed, tests and documentation with links to evidence
+Risk & Bottleneck Detection | Highlight blocked tasks, stale reviews, failing tests, critical bugs and dependency bottlenecks
+Project Progress Summary | Summarize progress across requirement, development and testing lifecycle
+AI Manager Summary | Generate daily/weekly project summaries from actual project activity
+
+--- TABLE 11 ---
+Feature | Purpose
+Team Workspace | Members, tasks, active work, blockers, reviews and ownership in one place
+Task Management | Create, assign, prioritize, track and close tasks
+Workload / Capacity View | Visualize current workload to avoid over-assignment or hidden bottlenecks
+Blocker Management | Developer can mark blockers by type and notify the responsible lead
+Review Queue | Track code reviews waiting for action and assign reviewers
+Team Activity Timeline | Project activity grouped by person, task and date
+Requirement-to-Task Assignment | Connect business requirements directly to implementation work
+
+--- TABLE 12 ---
+Feature | Purpose
+Requirements Workspace | Show what needs to be built, acceptance criteria and linked tasks
+Requirement → Task → Code traceability | Jump from requirement to task, changed files, PR/review and tests
+Developer Work Summary | Automatically summarize completed tasks, fixes, reviews, tests and documentation
+Contribution Timeline | Evidence-backed timeline of actual project activity
+Project-aware AI assistant | Answer code/project questions using current repository context
+Code-linked discussions | Comment on a specific task, file, change or code location
+Learning / explanation mode | Explain errors, project conventions and unfamiliar code for onboarding
+
+--- TABLE 13 ---
+Feature | Purpose
+Integrated QA Workspace | Testers work inside the same project lifecycle instead of switching tools
+Test Case Management | Create, edit, execute and track test cases
+AI Test Generation | Generate test scenarios from requirements/acceptance criteria for review
+Bug Management | Record severity, reproduction, expected/actual result, environment and evidence
+Bug Lifecycle | Detected -> Assigned -> In Progress -> Fixed -> Retest -> Passed
+Developer–Tester Link | Open related code/task from a bug and send fixed builds back for retest
+Test / Build History | Track test results against versions and changes
+
+--- TABLE 14 ---
+Feature | Purpose
+Project Chat | General project communication inside the workspace
+Task / Code Discussions | Keep discussion attached to the relevant work item or code
+Video / Audio Meetings | Meet without leaving the project workspace; later-stage feature
+Screen Sharing | Support team discussions and debugging sessions
+Project Resource Hub | Requirements, architecture, API docs, coding guide, deployment guide, meeting notes and links
+Meeting Notes | Store decisions and follow-up tasks as project artifacts
+
+--- TABLE 15 ---
+Feature | Purpose
+One-click deployment | Build/deploy supported applications and expose preview/status
+CI/CD integration | Automate builds, tests and release pipelines
+Cloud development environments | Create isolated reproducible development workspaces
+API tester | Test REST/API calls from the workspace
+Database explorer | Connect to approved databases and inspect/query data safely
+AI documentation generator | Generate and update README/API/technical documentation
+AI security assistant | Identify common security issues and suggest fixes
+Advanced repository retrieval | Search/index project context for AI at scale
+Agentic development assistant | Plan work, inspect files, propose changes, run tests and request approval
+Organization / multi-team management | Teams, organizations, permissions and shared projects
+Usage and cost dashboard | Track AI, execution, storage and compute usage
+Subscription / billing | Free/paid plans and resource limits for a future SaaS version
+Extension marketplace | Real plugin architecture and installable developer tools
+
+--- TABLE 16 ---
+Recommended central concept Instead of treating requirements, code, tests, bugs and people as separate modules, connect them into one traceable project graph.
+
+--- TABLE 17 ---
+Entity | What it should link to
+Requirement | Tasks, acceptance criteria, test cases, affected releases
+Task | Requirement, owner, files, pull request/change set, blocker
+Code change | Task, developer, review, version, tests
+Test case | Requirement, build/version, result, defect
+Bug | Requirement/task, test, affected files, fix change, retest
+Release | Requirements, merged changes, test status, deployment status
+
+--- TABLE 18 ---
+Feature example | Frontend (what user sees) | Backend (logic/APIs) | Database (what is stored)
+Requirements | Requirements page, cards, filters, detail panel | requirement routes/controller/service | Requirement document
+Tasks | Kanban/list, assignment form, status filters | task routes/controller, permission checks | Task document
+Contribution | Charts, timeline, activity feed | aggregation/analytics service | Activity/contribution events or derived analytics
+Testing | Test case screen, run result, bug form | test execution service, result APIs | TestCase/TestRun/Bug documents
+AI Copilot | Chat panel, context selector, approve/reject UI | AI provider service, retrieval/orchestration, verification service | AI runs/messages, optional embeddings/index metadata
+Communication | Chat/video/resources UI | Socket/chat service, meeting integration | Chat messages, meeting notes, resource metadata
+Deployment | Build/deploy buttons, logs, status | CI/CD/deployment service | Deployment/environment records
+Permissions | Role/permission controls | server-side authorization middleware | Membership/role/permission records
+
+--- TABLE 19 ---
+Layer | Responsibility
+Browser | React + Vite + Tailwind + Monaco + Zustand + Yjs + Socket.IO client
+↓ | REST requests / WebSocket events
+Server | Express + auth middleware + controllers + services + Socket.IO + Yjs collaboration manager
+↓ | Mongoose queries / filesystem / process execution
+Data & execution | MongoDB + workspace filesystem + terminal process + Git repository
+
+--- TABLE 20 ---
+Phase | Goal | Key work | Why now
+Phase 0 | Stabilize & verify current core | Run the existing project end-to-end; verify auth, 4-user collaboration, CRDT merge, invitations, terminal, search, Git and version history; document known issues. | Current baseline
+Phase 1 | Core technical hardening | Fix collaborative replace-all consistency, deleted-file Git visibility, safer Git auth, better terminal isolation plan, frontend code splitting and deployment-safe configuration. | Foundation before public/team use
+Phase 2 | Requirements + tasks + traceability | Add Requirement, Task, Acceptance Criteria and links among requirement → task → files/change. | First major product layer
+Phase 3 | Code review + QA + bugs | Add review queue, test cases, bug lifecycle, retest flow and links between tests/bugs/code changes. | Connect development and testing
+Phase 4 | Contribution + team management | Add contribution timeline, activity evidence, team workload, blockers, project health and manager/team-lead dashboards. | Management visibility without simplistic scoring
+Phase 5 | AI Copilot | Implement project-aware AI, contextual retrieval, explanation, test generation, defect analysis, patch proposals, verification and human approval. | Major AI milestone; already proposed in synopsis
+Phase 6 | Communication + resources | Project chat, task/code discussions, resource hub and meeting notes. Video/voice can follow as a later integration. | Reduce tool switching
+Phase 7 | DevOps + deployment | CI/CD, build history, deployment environments, preview links, deployment logs, API tester. | Move from coding to delivery
+Phase 8 | Startup / SaaS hardening | Organizations, scalable collaboration, container isolation, cloud workspaces, usage metering, plans/billing, marketplace. | Later production/business layer
+
+--- TABLE 21 ---
+Final-year build target | Later startup expansion
+Current collaborative IDE foundation | Scalable teams/organizations
+Requirements + tasks + traceability | Advanced product portfolio / multi-project management
+Basic review queue | Advanced code-review automation
+Basic QA: test cases + bugs + retest | Advanced test management / parallel execution
+Contribution timeline + team dashboard | Advanced analytics and forecasting
+Project-aware AI Copilot + verification | Agentic software-engineering workflows
+Project chat + resource hub | Video meetings / advanced communication
+Basic build/deploy demonstration | Production CI/CD and cloud environments
+
+--- TABLE 22 ---
+Do not rewrite the current frontend/backend first Extend the existing architecture. The current codebase already has clear React components/stores, Express controllers/routes, Socket.IO events, services, and Mongoose models. New modules should follow the same separation.
+
+--- TABLE 23 ---
+Who | Main value
+Developer | Understand requirements, collaborate on code, get AI help, track work and resolve issues in one workspace
+Tester / QA | Receive requirements, create/run tests, report bugs and verify fixes without losing context
+Team Leader | Assign work, manage blockers/reviews, understand workload and keep the team aligned
+Manager / Project Owner | See project health, progress, risks and evidence-backed contribution across the lifecycle
+AI layer | Understand project context, assist development/testing and propose verified changes with human approval
+
+--- TABLE 24 ---
+One-line positioning “A collaborative software-engineering platform that connects requirements, development, testing, project communication, contribution evidence and AI in one workspace.”
